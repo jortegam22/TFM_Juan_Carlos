@@ -25,7 +25,7 @@ resource "azurerm_stream_analytics_job" "asajob" {
     SELECT *
     INTO blobstorage
     FROM Eventos
-    WHERE environment = _entorno_ and eventType = 'Error'
+    WHERE 1=1 and environment = _entorno_ and eventType = 'Error'
   QUERY
 }
 
