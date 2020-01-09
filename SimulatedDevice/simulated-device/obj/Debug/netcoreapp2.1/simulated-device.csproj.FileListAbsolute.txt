@@ -1,0 +1,20 @@
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.csprojAssemblyReference.cache
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfoInputs.cache
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfo.cs
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.deps.json
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.json
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.dev.json
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.dll
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.pdb
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.dll
+F:\des\azure-iot-samples-csharp-master (1)\azure-iot-samples-csharp-master\iot-hub\Quickstarts\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.pdb
+F:\TFM\Dispositivo\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.deps.json
+F:\TFM\Dispositivo\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.json
+F:\TFM\Dispositivo\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.dev.json
+F:\TFM\Dispositivo\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.dll
+F:\TFM\Dispositivo\simulated-device\bin\Debug\netcoreapp2.1\simulated-device.pdb
+F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.csprojAssemblyReference.cache
+F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfoInputs.cache
+F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfo.cs
+F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.dll
+F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.pdb
