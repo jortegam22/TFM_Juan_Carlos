@@ -30,8 +30,8 @@ resource "azurerm_stream_analytics_job" "asajob" {
 }
 
 resource "azurerm_eventhub_consumer_group" "cg" {
-  name                = "__consumergroup_name-__"
-  namespace_name      = "__eventhub_namespace_name-__"
+  name                = "__consumergroup_name__"
+  namespace_name      = "__eventhub_namespace_name__"
   eventhub_name       = "__eventhub_eventhub_name__"
   resource_group_name = "__resource_group_name__"
 }
