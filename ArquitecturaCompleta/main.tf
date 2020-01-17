@@ -50,12 +50,14 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_storage_container" "pre_asa" {
   name                  = "_pre_ASA_"
+  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
 
 resource "azurerm_storage_container" "post_asa" {
   name                  = "_post_ASA_"
+  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
