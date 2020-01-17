@@ -1,14 +1,14 @@
 //Resource Group Configuration
 
 resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
-  location = var.resource_group_location
+  name     = "_rg_name_"
+  location = "_rg_location_"
 }
 
 //IoTHub Configuration
 
 resource "azurerm_iothub" "iothub" {
-  name                = "eventiothub"
+  name                = "_iothub_name_"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   
@@ -19,94 +19,51 @@ resource "azurerm_iothub" "iothub" {
   }
 
 endpoint {
-    type                       = "AzureIotHub.EventHub"
-    connection_string          = azurerm_eventhub_authorization_rule.datosaur.primary_connection_string
-    name                       = "eventhubep"
+    type                       = "AzureIotHub.StorageContainer"
+    connection_string          =     connection_string          = azurerm_storage_account.sa.primary_blob_connection_string
+    name                       = "_endpoint_name_"
     batch_frequency_in_seconds = 60
     max_chunk_size_in_bytes    = 10485760
-    container_name             = azurerm_storage_container.ev.name 
+    container_name             = azurerm_storage_container.pre_asa.name 
     encoding                   = "Json"
     file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
   }
 
   route {
-    name           = "eventhubep"
+    name           = "_endpoint_name_"
     source         = "DeviceMessages"
     condition      = "true"
-    endpoint_names = ["eventhubep"]
+    endpoint_names = ["_endpoint_name_"]
     enabled        = true
   }
-}
-
-/*resource "azurerm_iothub_endpoint_eventhub" "eventhubep" {
-  resource_group_name = azurerm_resource_group.rg.name
-  iothub_name         = azurerm_iothub.iothub.name
-  name                = "eventhubep"
-
-  connection_string = azurerm_eventhub_authorization_rule.datosaur.primary_connection_string
-}*/
-
-//EventHub Configuration
-
-resource "azurerm_eventhub_namespace" "datosns" {
-  name                = "datoseh"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  sku                 = "Standard"
-}
-
-resource "azurerm_eventhub" "datoseh" {
-  name                = "datoseh"
-  namespace_name      = azurerm_eventhub_namespace.datosns.name
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  partition_count     = 2
-  message_retention   = 1
-}
-
-resource "azurerm_eventhub_authorization_rule" "datosaur" {
-  name                = "datosaur"
-  namespace_name      = azurerm_eventhub_namespace.datosns.name
-  eventhub_name       = azurerm_eventhub.datoseh.name
-  resource_group_name = azurerm_resource_group.rg.name
-
-  listen = true
-  send   = true
-  manage = true
 }
 
 //Storage Account and Containers Configuration
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "prodsa"
+  name                     = "_sa_name_"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "ev" {
-  name                  = "datos"
+resource "azurerm_storage_container" "pre_asa" {
+  name                  = "_pre_ASA_"
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
 
-resource "azurerm_storage_container" "prod" {
-  name                  = "prod"
+resource "azurerm_storage_container" "post_asa" {
+  name                  = "_post_ASA_"
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
 
-resource "azurerm_storage_container" "dev" {
-  name                  = "dev"
-  storage_account_name  = azurerm_storage_account.sa.name
-  container_access_type = "container"
-}
-
-//prodASA Configuration
+//Stream Analytic Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
-  name                                     = "prodASA"
+  name                                     = "_asa_name_"
   resource_group_name                      = azurerm_resource_group.rg.name
   location                                 = azurerm_resource_group.rg.location
   compatibility_level                      = "1.1"
@@ -120,36 +77,25 @@ resource "azurerm_stream_analytics_job" "asa" {
   transformation_query = <<QUERY
   WITH Eventos AS (
     SELECT *
-    FROM eventhub
+    FROM _asa_input_name_
   )
 
     SELECT *
-    INTO blobstorage2
+    INTO _asa_output_blob_name_
     FROM Eventos
-
-    SELECT *
-    INTO blobstorage
-    FROM Eventos
-    WHERE environment = 1 and eventType = 'Error'
+    WHERE eventType = 'Error'
   QUERY
 }
 
-resource "azurerm_eventhub_consumer_group" "cg" {
-  name                = "proddatoscg"
-  namespace_name      = azurerm_eventhub_namespace.datosns.name
-  eventhub_name       = azurerm_eventhub.datoseh.name
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_stream_analytics_stream_input_eventhub" "asaevent" {
-  name                         = "eventhub"
+resource "azurerm_stream_analytics_stream_input_iothub" "example" {
+  name                         = "_asa_input_name_"
   stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
-  resource_group_name          = azurerm_resource_group.rg.name
-  eventhub_consumer_group_name = azurerm_eventhub_consumer_group.cg.name
-  eventhub_name                = azurerm_eventhub.datoseh.name
-  servicebus_namespace         = azurerm_eventhub_namespace.datosns.name
-  shared_access_policy_key     = azurerm_eventhub_namespace.datosns.default_primary_key
-  shared_access_policy_name    = "RootManageSharedAccessKey"
+  resource_group_name          = azurerm_stream_analytics_job.asa.resource_group_name
+  endpoint                     = "messages/events"
+  eventhub_consumer_group_name = "$Default"
+  iothub_namespace             = azurerm_iothub.asa.name
+  shared_access_policy_key     = azurerm_iothub.asa.shared_access_policy.0.primary_key
+  shared_access_policy_name    = "iothubowner"
 
   serialization {
     type     = "Json"
@@ -158,97 +104,12 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "asaevent" {
 }
 
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
-  name                      = "blobstorage"
+  name                      = "_asa_output_name_"
   stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
   resource_group_name       = azurerm_resource_group.rg.name
   storage_account_name      = azurerm_storage_account.sa.name
   storage_account_key       = azurerm_storage_account.sa.primary_access_key
-  storage_container_name    = azurerm_storage_container.prod.name
-  path_pattern              = "datos"
-  date_format               = "yyyy-MM-dd"
-  time_format               = "HH"
-
-  serialization {
-    type            = "Json"
-    encoding        = "UTF8"
-    format          = "LineSeparated"
-  }
-}
-
-resource "azurerm_stream_analytics_output_blob" "prodbs2" {
-  name                      = "blobstorage2"
-  stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
-  resource_group_name       = azurerm_resource_group.rg.name
-  storage_account_name      = azurerm_storage_account.sa.name
-  storage_account_key       = azurerm_storage_account.sa.primary_access_key
-  storage_container_name    = azurerm_storage_container.ev.name
-  path_pattern              = "datos"
-  date_format               = "yyyy-MM-dd"
-  time_format               = "HH"
-
-  serialization {
-    type            = "Json"
-    encoding        = "UTF8"
-    format          = "LineSeparated"
-  }
-}
-
-//devASA Configuration
-
-resource "azurerm_stream_analytics_job" "asa2" {
-  name                                     = "devASA"
-  resource_group_name                      = azurerm_resource_group.rg.name
-  location                                 = azurerm_resource_group.rg.location
-  compatibility_level                      = "1.1"
-  data_locale                              = "en-GB"
-  events_late_arrival_max_delay_in_seconds = 60
-  events_out_of_order_max_delay_in_seconds = 50
-  events_out_of_order_policy               = "Adjust"
-  output_error_policy                      = "Drop"
-  streaming_units                          = 3
-
-  transformation_query = <<QUERY
-  WITH Eventos AS (
-    SELECT *
-    FROM eventhub
-  )
-    SELECT *
-    INTO blobstorage
-    FROM Eventos
-    WHERE environment = 0 and eventType = 'Error'
-  QUERY
-}
-
-resource "azurerm_eventhub_consumer_group" "cg2" {
-  name                = "devdatoscg"
-  namespace_name      = azurerm_eventhub_namespace.datosns.name
-  eventhub_name       = azurerm_eventhub.datoseh.name
-  resource_group_name = azurerm_resource_group.rg.name
-}
-
-resource "azurerm_stream_analytics_stream_input_eventhub" "asaevent2" {
-  name                         = "eventhub"
-  stream_analytics_job_name    = azurerm_stream_analytics_job.asa2.name
-  resource_group_name          = azurerm_resource_group.rg.name
-  eventhub_consumer_group_name = azurerm_eventhub_consumer_group.cg2.name
-  eventhub_name                = azurerm_eventhub.datoseh.name
-  servicebus_namespace         = azurerm_eventhub_namespace.datosns.name
-  shared_access_policy_key     = azurerm_eventhub_namespace.datosns.default_primary_key
-  shared_access_policy_name    = "RootManageSharedAccessKey"
-
-  serialization {
-    type     = "Json"
-    encoding = "UTF8"
-  }
-}
-
-resource "azurerm_stream_analytics_output_blob" "devbs" {
-  name                      = "blobstorage"
-  stream_analytics_job_name = azurerm_stream_analytics_job.asa2.name
-  resource_group_name       = azurerm_resource_group.rg.name
-  storage_account_name      = azurerm_storage_account.sa.name
-  storage_account_key       = azurerm_storage_account.sa.primary_access_key
-  storage_container_name    = azurerm_storage_container.dev.name
+  storage_container_name    = azurerm_storage_container.post_asa.name
   path_pattern              = "datos"
   date_format               = "yyyy-MM-dd"
   time_format               = "HH"
