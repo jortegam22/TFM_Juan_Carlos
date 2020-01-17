@@ -1,14 +1,14 @@
 //Resource Group Configuration
 
 resource "azurerm_resource_group" "rg" {
-  name     = "_rg_name_"
-  location = "_rg_location_"
+  name     = "__rg_name__"
+  location = "__rg_location__"
 }
 
 //IoTHub Configuration
 
 resource "azurerm_iothub" "iothub" {
-  name                = "_iothub_name_"
+  name                = "__iothub_name__"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   
@@ -21,7 +21,7 @@ resource "azurerm_iothub" "iothub" {
 endpoint {
     type                       = "AzureIotHub.StorageContainer"
     connection_string          = azurerm_storage_account.sa.primary_blob_connection_string
-    name                       = "_endpoint_name_"
+    name                       = "__endpoint_name__"
     batch_frequency_in_seconds = 60
     max_chunk_size_in_bytes    = 10485760
     container_name             = azurerm_storage_container.pre_asa.name 
@@ -30,10 +30,10 @@ endpoint {
   }
 
   route {
-    name           = "_endpoint_name_"
+    name           = "__endpoint_name__"
     source         = "DeviceMessages"
     condition      = "true"
-    endpoint_names = ["_endpoint_name_"]
+    endpoint_names = ["__endpoint_name__"]
     enabled        = true
   }
 }
@@ -41,7 +41,7 @@ endpoint {
 //Storage Account and Containers Configuration
 
 resource "azurerm_storage_account" "sa" {
-  name                     = "_storage_name_"
+  name                     = "__storage_name__"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -49,14 +49,14 @@ resource "azurerm_storage_account" "sa" {
 }
 
 resource "azurerm_storage_container" "pre_asa" {
-  name                  = "_pre_ASA_"
+  name                  = "__pre_ASA__"
   resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
 
 resource "azurerm_storage_container" "post_asa" {
-  name                  = "_post_ASA_"
+  name                  = "__post_ASA__"
   resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
@@ -65,7 +65,7 @@ resource "azurerm_storage_container" "post_asa" {
 //Stream Analytic Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
-  name                                     = "_asa_name_"
+  name                                     = "__asa_name__"
   resource_group_name                      = azurerm_resource_group.rg.name
   location                                 = azurerm_resource_group.rg.location
   compatibility_level                      = "1.1"
@@ -79,18 +79,18 @@ resource "azurerm_stream_analytics_job" "asa" {
   transformation_query = <<QUERY
   WITH Eventos AS (
     SELECT *
-    FROM _asa_input_name_
+    FROM __asa_input_name__
   )
 
     SELECT *
-    INTO _asa_output_blob_name_
+    INTO __asa_output_blob_name__
     FROM Eventos
     WHERE eventType = 'Error'
   QUERY
 }
 
 resource "azurerm_stream_analytics_stream_input_iothub" "example" {
-  name                         = "_asa_input_name_"
+  name                         = "__asa_input_name__"
   stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
   resource_group_name          = azurerm_stream_analytics_job.asa.resource_group_name
   endpoint                     = "messages/events"
@@ -106,7 +106,7 @@ resource "azurerm_stream_analytics_stream_input_iothub" "example" {
 }
 
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
-  name                      = "_asa_output_name_"
+  name                      = "__asa_output_name__"
   stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
   resource_group_name       = azurerm_resource_group.rg.name
   storage_account_name      = azurerm_storage_account.sa.name
