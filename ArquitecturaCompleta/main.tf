@@ -83,7 +83,7 @@ resource "azurerm_stream_analytics_job" "asa" {
   )
 
     SELECT *
-    INTO __asa_output_blob_name__
+    INTO __asa_output_name__
     FROM Eventos
     WHERE eventType = 'Error'
   QUERY
