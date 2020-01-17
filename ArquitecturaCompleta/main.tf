@@ -93,8 +93,8 @@ resource "azurerm_stream_analytics_stream_input_iothub" "example" {
   resource_group_name          = azurerm_stream_analytics_job.asa.resource_group_name
   endpoint                     = "messages/events"
   eventhub_consumer_group_name = "$Default"
-  iothub_namespace             = azurerm_iothub.asa.name
-  shared_access_policy_key     = azurerm_iothub.asa.shared_access_policy.0.primary_key
+  iothub_namespace             = azurerm_iothub.iothub.name
+  shared_access_policy_key     = azurerm_iothub.iothub.shared_access_policy.0.primary_key
   shared_access_policy_name    = "iothubowner"
 
   serialization {
