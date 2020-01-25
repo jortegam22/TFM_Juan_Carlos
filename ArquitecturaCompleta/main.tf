@@ -48,7 +48,7 @@ resource "azurerm_storage_account" "sa" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_container" "pre_asa" {
+/*resource "azurerm_storage_container" "pre_asa" {
   name                  = "__pre_ASA__"
   resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
@@ -60,7 +60,7 @@ resource "azurerm_storage_container" "post_asa" {
   resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
-}
+}*/
 
 //Stream Analytic Configuration
 
