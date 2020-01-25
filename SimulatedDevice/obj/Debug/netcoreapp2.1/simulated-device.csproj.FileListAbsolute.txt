@@ -18,3 +18,13 @@ F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.Ass
 F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfo.cs
 F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.dll
 F:\TFM\Dispositivo\simulated-device\obj\Debug\netcoreapp2.1\simulated-device.pdb
+F:\TFM_Juan_Carlos\SimulatedDevice\bin\Debug\netcoreapp2.1\simulated-device.deps.json
+F:\TFM_Juan_Carlos\SimulatedDevice\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.json
+F:\TFM_Juan_Carlos\SimulatedDevice\bin\Debug\netcoreapp2.1\simulated-device.runtimeconfig.dev.json
+F:\TFM_Juan_Carlos\SimulatedDevice\bin\Debug\netcoreapp2.1\simulated-device.dll
+F:\TFM_Juan_Carlos\SimulatedDevice\bin\Debug\netcoreapp2.1\simulated-device.pdb
+F:\TFM_Juan_Carlos\SimulatedDevice\obj\Debug\netcoreapp2.1\simulated-device.csprojAssemblyReference.cache
+F:\TFM_Juan_Carlos\SimulatedDevice\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfoInputs.cache
+F:\TFM_Juan_Carlos\SimulatedDevice\obj\Debug\netcoreapp2.1\simulated-device.AssemblyInfo.cs
+F:\TFM_Juan_Carlos\SimulatedDevice\obj\Debug\netcoreapp2.1\simulated-device.dll
+F:\TFM_Juan_Carlos\SimulatedDevice\obj\Debug\netcoreapp2.1\simulated-device.pdb

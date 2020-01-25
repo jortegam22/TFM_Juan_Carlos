@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\TFM\\Dispositivo\\simulated-device\\simulated-device.csproj": {}
+    "F:\\TFM_Juan_Carlos\\SimulatedDevice\\simulated-device.csproj": {}
   },
   "projects": {
-    "F:\\TFM\\Dispositivo\\simulated-device\\simulated-device.csproj": {
+    "F:\\TFM_Juan_Carlos\\SimulatedDevice\\simulated-device.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\TFM\\Dispositivo\\simulated-device\\simulated-device.csproj",
+        "projectUniqueName": "F:\\TFM_Juan_Carlos\\SimulatedDevice\\simulated-device.csproj",
         "projectName": "simulated-device",
-        "projectPath": "F:\\TFM\\Dispositivo\\simulated-device\\simulated-device.csproj",
+        "projectPath": "F:\\TFM_Juan_Carlos\\SimulatedDevice\\simulated-device.csproj",
         "packagesPath": "C:\\Users\\Propietario\\.nuget\\packages\\",
-        "outputPath": "F:\\TFM\\Dispositivo\\simulated-device\\obj\\",
+        "outputPath": "F:\\TFM_Juan_Carlos\\SimulatedDevice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Propietario\\AppData\\Roaming\\NuGet\\NuGet.Config",
