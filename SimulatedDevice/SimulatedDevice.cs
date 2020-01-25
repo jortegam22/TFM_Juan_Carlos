@@ -11,9 +11,8 @@ namespace SimulatedDevice
     class Program
     {
         static DeviceClient deviceClient;
-        static string iotHubUri = "HostName=eventiothub.azure-devices.net;DeviceId=Device2;SharedAccessKey=f890dFNnD5yxSvS/elFyJ1q805zdC+VtPqbrJ7B4FjU=";
-        //static string deviceKey = "f890dFNnD5yxSvS/elFyJ1q805zdC+VtPqbrJ7B4FjU=";
-        static string deviceID = "Device2";
+        static string iotHubUri = "HostName=devEventsIoTHub.azure-devices.net;DeviceId=Device1;SharedAccessKey=GU77gDbVBZOhogQbSjqeqEDX9ddqtUo7hd1BFSMSih4=";
+        static string deviceID = "Device1";
         static void Main(string[] args)
         {
             Console.WriteLine("Simulated device\n");
