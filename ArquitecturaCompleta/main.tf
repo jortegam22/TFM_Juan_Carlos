@@ -13,8 +13,8 @@ resource "azurerm_iothub" "iothub" {
   location            = azurerm_resource_group.rg.location
   
   sku {
-    name     = "F1"
-    tier     = "Standard"
+    name     = "__iot_sku_name__"
+    tier     = "__iot_sku_tier__"
     capacity = "1"
   }
 
@@ -24,7 +24,7 @@ endpoint {
     name                       = "__endpoint_name__"
     batch_frequency_in_seconds = 60
     max_chunk_size_in_bytes    = 10485760
-    container_name             = azurerm_storage_container.pre_asa.name 
+    container_name             = "__pre_ASA__"
     encoding                   = "Json"
     file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
   }
@@ -111,7 +111,7 @@ resource "azurerm_stream_analytics_output_blob" "prodbs" {
   resource_group_name       = azurerm_resource_group.rg.name
   storage_account_name      = azurerm_storage_account.sa.name
   storage_account_key       = azurerm_storage_account.sa.primary_access_key
-  storage_container_name    = azurerm_storage_container.post_asa.name
+  storage_container_name    = "__post_ASA__"
   path_pattern              = "datos"
   date_format               = "yyyy-MM-dd"
   time_format               = "HH"
