@@ -18,7 +18,7 @@ resource "azurerm_iothub" "iothub" {
     capacity = "1"
   }
 
-endpoint {
+/*endpoint {
     type                       = "AzureIotHub.StorageContainer"
     connection_string          = azurerm_storage_account.sa.primary_blob_connection_string
     name                       = "__endpoint_name__"
@@ -35,7 +35,40 @@ endpoint {
     condition      = "true"
     endpoint_names = ["__endpoint_name__"]
     enabled        = true
-  }
+  }*/
+}
+
+resource "azurerm_eventhub_authorization_rule" "ar" {
+  name                = "__ar_name__"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  eventhub_name       = azurerm_eventhub.example.name
+  resource_group_name = azurerm_resource_group.example.name
+
+  listen = false
+  send   = true
+  manage = false
+}
+
+resource "azurerm_iothub_endpoint_eventhub" "epeh" {
+  resource_group_name = azurerm_resource_group.rg.name
+  iothub_name         = azurerm_iothub.iothub.name
+  name                = "__epeh_name__"
+
+  connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
+}
+
+resource "azurerm_iothub_endpoint_storage_container" "epse" {
+  resource_group_name = azurerm_resource_group.rg.name
+  iothub_name         = azurerm_iothub.iothub.name
+  name                = "__epse_name__"
+
+  container_name    = "events"
+  connection_string = azurerm_storage_account.sa.primary_blob_connection_string
+
+  file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
+  batch_frequency_in_seconds = 60
+  max_chunk_size_in_bytes    = 10485760
+  encoding                   = "JSON"
 }
 
 //Storage Account and Containers Configuration
@@ -62,6 +95,24 @@ resource "azurerm_storage_container" "post_asa" {
   container_access_type = "container"
 }*/
 
+//EventHub Configuration
+
+resource "azurerm_eventhub_namespace" "ehns" {
+  name                = "__ns_name__"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  sku                 = "Standard"
+  capacity            = 1
+}
+
+resource "azurerm_eventhub" "eh" {
+  name                = "__eh_name__"
+  namespace_name      = azurerm_eventhub_namespace.example.name
+  resource_group_name = azurerm_resource_group.example.name
+  partition_count     = 2
+  message_retention   = 1
+}
+
 //Stream Analytic Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
@@ -82,14 +133,14 @@ resource "azurerm_stream_analytics_job" "asa" {
     FROM __asa_input_name__
   )
 
-    SELECT *
-    INTO __asa_output_name__
-    FROM Eventos
-    WHERE eventType = 'Error'
+  SELECT *
+  INTO __asa_output_name__
+  FROM Eventos
+  WHERE eventType = 'Error'
   QUERY
 }
 
-resource "azurerm_stream_analytics_stream_input_iothub" "example" {
+/*resource "azurerm_stream_analytics_stream_input_iothub" "example" {
   name                         = "__asa_input_name__"
   stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
   resource_group_name          = azurerm_stream_analytics_job.asa.resource_group_name
@@ -103,7 +154,29 @@ resource "azurerm_stream_analytics_stream_input_iothub" "example" {
     type     = "Json"
     encoding = "UTF8"
   }
+}*/
+
+resource "azurerm_eventhub_consumer_group" "ehcg" {
+  name                = "__ehcg_name__"
+  namespace_name      = azurerm_eventhub_namespace.ehns.name
+  eventhub_name       = azurerm_eventhub.eh.name
+  resource_group_name = data.azurerm_resource_group.rg.name
 }
+
+resource "azurerm_stream_analytics_stream_input_eventhub" "example" {
+  name                         = "__asa_input_name__"
+  stream_analytics_job_name    = data.azurerm_stream_analytics_job.asa.name
+  resource_group_name          = data.azurerm_stream_analytics_job.asa.resource_group_name
+  eventhub_consumer_group_name = azurerm_eventhub_consumer_group.ehcg.name
+  eventhub_name                = azurerm_eventhub.eh.name
+  servicebus_namespace         = azurerm_eventhub_namespace.ehns.name
+  shared_access_policy_key     = azurerm_eventhub_namespace.ehns.default_primary_key
+  shared_access_policy_name    = "RootManageSharedAccessKey"
+
+  serialization {
+    type     = "Json"
+    encoding = "UTF8"
+  }
 
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
   name                      = "__asa_output_name__"
