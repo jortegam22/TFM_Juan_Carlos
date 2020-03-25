@@ -40,9 +40,9 @@ resource "azurerm_iothub" "iothub" {
 
 resource "azurerm_eventhub_authorization_rule" "ar" {
   name                = "__ar_name__"
-  namespace_name      = azurerm_eventhub_namespace.example.name
-  eventhub_name       = azurerm_eventhub.example.name
-  resource_group_name = azurerm_resource_group.example.name
+  namespace_name      = azurerm_eventhub_namespace.ehns.name
+  eventhub_name       = azurerm_eventhub.eh.name
+  resource_group_name = azurerm_resource_group.rg.name
 
   listen = false
   send   = true
@@ -107,8 +107,8 @@ resource "azurerm_eventhub_namespace" "ehns" {
 
 resource "azurerm_eventhub" "eh" {
   name                = "__eh_name__"
-  namespace_name      = azurerm_eventhub_namespace.example.name
-  resource_group_name = azurerm_resource_group.example.name
+  namespace_name      = azurerm_eventhub_namespace.ehns.name
+  resource_group_name = azurerm_resource_group.ehns.name
   partition_count     = 2
   message_retention   = 1
 }
@@ -171,7 +171,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
   eventhub_name                = azurerm_eventhub.eh.name
   servicebus_namespace         = azurerm_eventhub_namespace.ehns.name
   shared_access_policy_key     = azurerm_eventhub_namespace.ehns.default_primary_key
-  shared_access_policy_name    = "RootManageSharedAccessKey"
+  shared_access_policy_name    = "iothubowner"
 
   serialization {
     type     = "Json"
