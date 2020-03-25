@@ -18,15 +18,15 @@ resource "azurerm_iothub" "iothub" {
     capacity = "1"
   }
 
-/*endpoint {
-    type                       = "AzureIotHub.StorageContainer"
-    connection_string          = azurerm_storage_account.sa.primary_blob_connection_string
+endpoint {
+    type                       = "AzureIotHub.EventHub"
+    connection_string          = azurerm_eventhub_authorization_rule.ar.primary_connection_string
     name                       = "__endpoint_name__"
-    batch_frequency_in_seconds = 60
+    /*batch_frequency_in_seconds = 60
     max_chunk_size_in_bytes    = 10485760
     container_name             = "__pre_ASA__"
     encoding                   = "Json"
-    file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
+    file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"*/
   }
 
   route {
@@ -35,7 +35,7 @@ resource "azurerm_iothub" "iothub" {
     condition      = "true"
     endpoint_names = ["__endpoint_name__"]
     enabled        = true
-  }*/
+  }
 }
 
 resource "azurerm_eventhub_authorization_rule" "ar" {
