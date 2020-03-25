@@ -57,7 +57,7 @@ resource "azurerm_iothub_endpoint_eventhub" "epeh" {
   connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
 }
 
-resource "azurerm_iothub_endpoint_storage_container" "epse" {
+/*resource "azurerm_iothub_endpoint_storage_container" "epse" {
   resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
   name                = "__epse_name__"
@@ -69,7 +69,7 @@ resource "azurerm_iothub_endpoint_storage_container" "epse" {
   batch_frequency_in_seconds = 60
   max_chunk_size_in_bytes    = 10485760
   encoding                   = "JSON"
-}
+}*/
 
 //Storage Account and Containers Configuration
 
