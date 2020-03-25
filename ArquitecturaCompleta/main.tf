@@ -160,13 +160,13 @@ resource "azurerm_eventhub_consumer_group" "ehcg" {
   name                = "__ehcg_name__"
   namespace_name      = azurerm_eventhub_namespace.ehns.name
   eventhub_name       = azurerm_eventhub.eh.name
-  resource_group_name = data.azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
-resource "azurerm_stream_analytics_stream_input_eventhub" "example" {
+resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
   name                         = "__asa_input_name__"
-  stream_analytics_job_name    = data.azurerm_stream_analytics_job.asa.name
-  resource_group_name          = data.azurerm_stream_analytics_job.asa.resource_group_name
+  stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
+  resource_group_name          = azurerm_stream_analytics_job.asa.resource_group_name
   eventhub_consumer_group_name = azurerm_eventhub_consumer_group.ehcg.name
   eventhub_name                = azurerm_eventhub.eh.name
   servicebus_namespace         = azurerm_eventhub_namespace.ehns.name
