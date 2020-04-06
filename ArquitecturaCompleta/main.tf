@@ -1,3 +1,10 @@
+//Terraform Configuration
+
+provider "azurerm" {
+  version = "=2.0.0"
+  features {}
+}
+
 //Resource Group Configuration
 
 resource "azurerm_resource_group" "rg" {
