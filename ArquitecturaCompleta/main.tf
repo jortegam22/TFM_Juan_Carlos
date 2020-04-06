@@ -64,7 +64,7 @@ resource "azurerm_iothub" "iothub" {
 resource "azurerm_iothub_endpoint_eventhub" "iotep" {
   resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
-  name                = "__endpoint_name__"
+  name                = "__epeh_name__"
 
   connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
 }
