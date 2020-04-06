@@ -64,7 +64,7 @@ resource "azurerm_iothub" "iothub" {
 resource "azurerm_iothub_endpoint_eventhub" "iotep" {
   resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
-  name                = azurerm_iothub.iothub.route[0]
+  name                = "__endpoint_name__"
 
   connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
 }
@@ -72,7 +72,7 @@ resource "azurerm_iothub_endpoint_eventhub" "iotep" {
 resource "azurerm_iothub_route" "iotroute" {
   resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
-  name                = azurerm_iothub.iothub.route[0]
+  name                = "__endpoint_name__"
 
   source         = "DeviceMessages"
   condition      = "true"
