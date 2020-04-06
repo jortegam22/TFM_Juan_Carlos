@@ -16,15 +16,15 @@ resource "azurerm_resource_group" "rg" {
 
 resource "azurerm_eventhub_namespace" "ehns" {
   name                = "__ns_name__"
-  location            = "__rg_location__"
-  resource_group_name = "__rg_name__"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
   sku                 = "Basic"
 }
 
 resource "azurerm_eventhub" "eh" {
   name                = "__eh_name__"
   namespace_name      = azurerm_eventhub_namespace.ehns.name
-  resource_group_name = "__rg_name__"
+  resource_group_name = azurerm_resource_group.rg.name
   partition_count     = 2
   message_retention   = 1
 }
@@ -33,7 +33,7 @@ resource "azurerm_eventhub_authorization_rule" "ar" {
   name                = "__ar_name__"
   namespace_name      = azurerm_eventhub_namespace.ehns.name
   eventhub_name       = azurerm_eventhub.eh.name
-  resource_group_name = "__rg_name__"
+  resource_group_name = azurerm_resource_group.rg.name
 
   listen = false
   send   = true
@@ -44,8 +44,8 @@ resource "azurerm_eventhub_authorization_rule" "ar" {
 
 resource "azurerm_iothub" "iothub" {
   name                = "__iothub_name__"
-  resource_group_name = "__rg_name__"
-  location            = "__rg_location__"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   
   sku {
     name     = "__iot_sku_name__"
@@ -62,7 +62,7 @@ resource "azurerm_iothub" "iothub" {
 }
 
 resource "azurerm_iothub_endpoint_eventhub" "iotep" {
-  resource_group_name = "__rg_name__"
+  resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
   name                = "__epeh_name__"
 
@@ -70,7 +70,7 @@ resource "azurerm_iothub_endpoint_eventhub" "iotep" {
 }
 
 resource "azurerm_iothub_route" "iotroute" {
-  resource_group_name = "__rg_name__"
+  resource_group_name = azurerm_resource_group.rg.name
   iothub_name         = azurerm_iothub.iothub.name
   name                = "__endpoint_name__"
 
@@ -84,8 +84,8 @@ resource "azurerm_iothub_route" "iotroute" {
 
 resource "azurerm_storage_account" "sa" {
   name                     = "__storage_name__"
-  resource_group_name      = "__rg_name__"
-  location                 = "__rg_location__"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
@@ -94,8 +94,8 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_stream_analytics_job" "asa" {
   name                                     = "__asa_name__"
-  resource_group_name                      = "__rg_name__"
-  location                                 = "__rg_location__"
+  resource_group_name                      = azurerm_resource_group.rg.name
+  location                                 = azurerm_resource_group.rg.location
   compatibility_level                      = "1.1"
   data_locale                              = "en-GB"
   events_late_arrival_max_delay_in_seconds = 60
@@ -120,13 +120,13 @@ resource "azurerm_eventhub_consumer_group" "ehcg" {
   name                = "__ehcg_name__"
   namespace_name      = azurerm_eventhub_namespace.ehns.name
   eventhub_name       = azurerm_eventhub.eh.name
-  resource_group_name = "__rg_name__"
+  resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
   name                         = "__asa_input_name__"
   stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
-  resource_group_name          = "__rg_name__"
+  resource_group_name          = azurerm_resource_group.rg.name
   eventhub_consumer_group_name = azurerm_eventhub_consumer_group.ehcg.name
   eventhub_name                = azurerm_eventhub.eh.name
   servicebus_namespace         = azurerm_eventhub_namespace.ehns.name
@@ -142,7 +142,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
   name                      = "__asa_output_name__"
   stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
-  resource_group_name       = "__rg_name__"
+  resource_group_name       = azurerm_resource_group.rg.name
   storage_account_name      = azurerm_storage_account.sa.name
   storage_account_key       = azurerm_storage_account.sa.primary_access_key
   storage_container_name    = "__post_ASA__"
