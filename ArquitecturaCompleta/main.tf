@@ -12,20 +12,13 @@ resource "azurerm_resource_group" "rg" {
   location = "__rg_location__"
 }
 
-resource "azurerm_storage_account" "sa" {
-  name                     = "__storage_name__"
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
+//EventHub Configuration
 
 resource "azurerm_eventhub_namespace" "ehns" {
   name                = "__ns_name__"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  sku                 = "Standard"
-  capacity            = 1
+  sku                 = "Basic"
 }
 
 resource "azurerm_eventhub" "eh" {
@@ -47,6 +40,8 @@ resource "azurerm_eventhub_authorization_rule" "ar" {
   manage = false
 }
 
+//IoTHub Configuration
+
 resource "azurerm_iothub" "iothub" {
   name                = "__iothub_name__"
   resource_group_name = azurerm_resource_group.rg.name
@@ -58,12 +53,6 @@ resource "azurerm_iothub" "iothub" {
     capacity = "1"
   }
 
-endpoint {
-    type                       = "AzureIotHub.EventHub"
-    connection_string          = azurerm_eventhub_authorization_rule.ar.primary_connection_string
-    name                       = "__endpoint_name__"
-  }
-
   route {
     name           = "__endpoint_name__"
     source         = "DeviceMessages"
@@ -71,6 +60,35 @@ endpoint {
     endpoint_names = ["__endpoint_name__"]
     enabled        = true
   }
+}
+
+resource "azurerm_iothub_endpoint_eventhub" "iotep" {
+  resource_group_name = azurerm_resource_group.rg.name
+  iothub_name         = azurerm_iothub.iothub.name
+  name                = azurerm_iothub.iothub.route.name
+
+  connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
+}
+
+resource "azurerm_iothub_route" "iotroute" {
+  resource_group_name = azurerm_resource_group.rg.name
+  iothub_name         = azurerm_iothub.iothub.name
+  name                = azurerm_iothub.iothub.route.name
+
+  source         = "DeviceMessages"
+  condition      = "true"
+  endpoint_names = ["__pre_ASA__"]
+  enabled        = true
+}
+
+//Storage Account Configuration
+
+resource "azurerm_storage_account" "sa" {
+  name                     = "__storage_name__"
+  resource_group_name      = azurerm_resource_group.rg.name
+  location                 = azurerm_resource_group.rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
 }
 
 //Stream Analytic Configuration
@@ -92,7 +110,6 @@ resource "azurerm_stream_analytics_job" "asa" {
     SELECT *
     FROM __asa_input_name__
   )
-
   SELECT *
   INTO __asa_output_name__
   FROM Eventos
