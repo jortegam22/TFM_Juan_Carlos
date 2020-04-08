@@ -1,3 +1,10 @@
+//Terraform Configuration
+
+provider "azurerm" {
+  version = "=2.0.0"
+  features {}
+}
+
 //ASA Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
