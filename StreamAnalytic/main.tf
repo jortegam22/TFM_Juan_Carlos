@@ -24,14 +24,15 @@ resource "azurerm_stream_analytics_job" "asa" {
     SELECT *
     FROM __asa_input_name__
   )
-    SELECT *
-    INTO __asa_output_name__
-    FROM Eventos
-    WHERE eventType = 'Error' and This is a test
+
+  SELECT *
+  INTO __asa_output_name__
+  FROM Eventos
+  WHERE eventType = 'Error' and This is a test :)
   QUERY
 }
 
-resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
+resource "azurerm_stream_analytics_stream_input_eventhub" "asainput" {
   name                         = "__asa_input_name__"
   stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
   resource_group_name          = "__rg_name__"
@@ -47,7 +48,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
   }
 }
 
-resource "azurerm_stream_analytics_output_blob" "prodbs" {
+resource "azurerm_stream_analytics_output_blob" "asablob" {
   name                      = "__asa_output_name__"
   stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
   resource_group_name       = "__rg_name__"
