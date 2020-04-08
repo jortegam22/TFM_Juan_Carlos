@@ -39,7 +39,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
   eventhub_name                = "__eh_name__"
   servicebus_namespace         = "__ehns_name__"
   shared_access_policy_key     = "__ehns_access_policy_key__"
-  shared_access_policy_name    = "iothubowner"
+  shared_access_policy_name    = "RootManageSharedAccessKey"
 
   serialization {
     type     = "Json"
