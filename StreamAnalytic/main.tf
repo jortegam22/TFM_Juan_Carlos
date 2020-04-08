@@ -20,7 +20,7 @@ resource "azurerm_stream_analytics_job" "asa" {
     SELECT *
     INTO __asa_output_name__
     FROM Eventos
-    WHERE eventType = 'Error' and This is a test
+    WHERE eventType = 'Error' and This is a test :)
   QUERY
 }
 
