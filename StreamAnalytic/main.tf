@@ -1,6 +1,6 @@
 //ASA Configuration
 
-resource "azurerm_stream_analytics_job" "asajob" {
+resource "azurerm_stream_analytics_job" "asa" {
   name                                     = "__asa_name__"
   resource_group_name                      = "__resource_group_name__"
   location                                 = "__resource_group_location__"
@@ -15,36 +15,24 @@ resource "azurerm_stream_analytics_job" "asajob" {
   transformation_query = <<QUERY
   WITH Eventos AS (
     SELECT *
-    FROM eventhub
+    FROM __asa_input_name__
   )
-
     SELECT *
-    INTO blobstorage2
+    INTO __asa_output_name__
     FROM Eventos
-
-    SELECT *
-    INTO blobstorage
-    FROM Eventos
-    WHERE eventType = 'Error'
+    WHERE eventType = 'Error' and This is a test
   QUERY
 }
 
-resource "azurerm_eventhub_consumer_group" "cg" {
-  name                = "__consumergroup_name__"
-  namespace_name      = "__eventhub_namespace_name__"
-  eventhub_name       = "__eventhub_eventhub_name__"
-  resource_group_name = "__resource_group_name__"
-}
-
-resource "azurerm_stream_analytics_stream_input_eventhub" "asajobevent" {
-  name                         = "eventhub"
-  stream_analytics_job_name    = azurerm_stream_analytics_job.asajob.name
-  resource_group_name          = "__resource_group_name__"
-  eventhub_consumer_group_name = azurerm_eventhub_consumer_group.cg.name
-  eventhub_name                = "__eventhub.eventhub_name__"
-  servicebus_namespace         = "__eventhub_namespace_name__"
-  shared_access_policy_key     = "__eventhub_namespace_access_policy_key__"
-  shared_access_policy_name    = "RootManageSharedAccessKey"
+resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
+  name                         = "__asa_input_name__"
+  stream_analytics_job_name    = azurerm_stream_analytics_job.asa.name
+  resource_group_name          = azurerm_resource_group.rg.name
+  eventhub_consumer_group_name = "__ehcg_name__"
+  eventhub_name                = azurerm_eventhub.eh.name
+  servicebus_namespace         = azurerm_eventhub_namespace.ehns.name
+  shared_access_policy_key     = azurerm_eventhub_namespace.ehns.default_primary_key
+  shared_access_policy_name    = "iothubowner"
 
   serialization {
     type     = "Json"
@@ -52,31 +40,13 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "asajobevent" {
   }
 }
 
-resource "azurerm_stream_analytics_output_blob" "storejob" {
-  name                      = "blobstorage"
-  stream_analytics_job_name = azurerm_stream_analytics_job.asajob.name
-  resource_group_name       = "__resource_group_name__"
-  storage_account_name      = "__storage_account_name__"
-  storage_account_key       = "__storage_account_key__"
-  storage_container_name    = "__storage_container_name__"
-  path_pattern              = "datos"
-  date_format               = "yyyy-MM-dd"
-  time_format               = "HH"
-
-  serialization {
-    type            = "Json"
-    encoding        = "UTF8"
-    format          = "LineSeparated"
-  }
-}
-
-resource "azurerm_stream_analytics_output_blob" "processjob" {
-  name                      = "blobstorage2"
-  stream_analytics_job_name = azurerm_stream_analytics_job.asajob.name
-    resource_group_name     = "__resource_group_name__"
-  storage_account_name      = "__storage_account_name__"
-  storage_account_key       = "__storage_account_key__"
-  storage_container_name    = "__storage_container_name__"
+resource "azurerm_stream_analytics_output_blob" "prodbs" {
+  name                      = "__asa_output_name__"
+  stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
+  resource_group_name       = azurerm_resource_group.rg.name
+  storage_account_name      = azurerm_storage_account.sa.name
+  storage_account_key       = azurerm_storage_account.sa.primary_access_key
+  storage_container_name    = "__post_ASA__"
   path_pattern              = "datos"
   date_format               = "yyyy-MM-dd"
   time_format               = "HH"
