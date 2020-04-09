@@ -14,7 +14,7 @@ data "azurerm_resource_group" "rg" {
 //ASA Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
-  name                                     = var.asa_name"
+  name                                     = var.asa_name
   resource_group_name                      = azurerm_resource_group.rg.name
   location                                 = var.rg_location
   compatibility_level                      = "1.1"
