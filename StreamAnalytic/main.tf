@@ -8,9 +8,9 @@ provider "azurerm" {
 //ASA Configuration
 
 resource "azurerm_stream_analytics_job" "asa" {
-  name                                     = var.asa_name
-  resource_group_name                      = var.rg_name
-  location                                 = var.rg_location
+  name                                     = asa_name
+  resource_group_name                      = rg_name
+  location                                 = rg_location
   compatibility_level                      = "1.1"
   data_locale                              = "en-GB"
   events_late_arrival_max_delay_in_seconds = 60
