@@ -23,14 +23,20 @@ resource "azurerm_iothub" "iothub" {
     name     = "__iot_sku_name__"
     capacity = "1"
   }
-}
 
-resource "azurerm_iothub_endpoint_eventhub" "epeh" {
-  resource_group_name = azurerm_resource_group.rg.name
-  iothub_name         = azurerm_iothub.iothub.name
-  name                = "__epeh_name__"
+  endpoint {
+    type              = "AzureIotHub.EventHub"
+    connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
+    name              = "export"
+  }
 
-  connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
+  route {
+    name           = "export"
+    source         = "DeviceMessages"
+    condition      = "true"
+    endpoint_names = ["export"]
+    enabled        = true
+  }
 }
 
 resource "azurerm_iothub_endpoint_storage_container" "epse" {
