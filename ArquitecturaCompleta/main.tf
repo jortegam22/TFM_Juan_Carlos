@@ -21,7 +21,6 @@ resource "azurerm_iothub" "iothub" {
   
   sku {
     name     = "__iot_sku_name__"
-    tier     = "__iot_sku_tier__"
     capacity = "1"
   }
 }
@@ -60,8 +59,8 @@ resource "azurerm_eventhub_namespace" "ehns" {
 
 resource "azurerm_eventhub" "eh" {
   name                = "__eh_name__"
-  namespace_name      = azurerm_eventhub_namespace.example.name
-  resource_group_name = azurerm_resource_group.example.name
+  namespace_name      = azurerm_eventhub_namespace.ehns.name
+  resource_group_name = azurerm_resource_group.rg.name
   partition_count     = 2
   message_retention   = 1
 }
@@ -89,14 +88,12 @@ resource "azurerm_storage_account" "sa" {
 
 resource "azurerm_storage_container" "pre_asa" {
   name                  = "__pre_ASA__"
-  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
 
 resource "azurerm_storage_container" "post_asa" {
   name                  = "__post_ASA__"
-  resource_group_name   = azurerm_resource_group.rg.name
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "container"
 }
@@ -143,6 +140,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
     encoding = "UTF8"
   }
 }
+
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
   name                      = "__asa_output_name__"
   stream_analytics_job_name = azurerm_stream_analytics_job.asa.name
