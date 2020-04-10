@@ -45,7 +45,7 @@ resource "azurerm_iothub" "iothub" {
     batch_frequency_in_seconds = 60
     max_chunk_size_in_bytes    = 10485760
     container_name             = azurerm_storage_container.pre_asa.name
-    encoding                   = "CSV"
+    encoding                   = "JSON"
     file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
   }
 
