@@ -142,6 +142,7 @@ resource "azurerm_stream_analytics_stream_input_eventhub" "sainput" {
     type     = "Json"
     encoding = "UTF8"
   }
+}
 
 resource "azurerm_stream_analytics_output_blob" "prodbs" {
   name                      = "__asa_output_name__"
