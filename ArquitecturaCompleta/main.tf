@@ -27,14 +27,33 @@ resource "azurerm_iothub" "iothub" {
   endpoint {
     type              = "AzureIotHub.EventHub"
     connection_string = azurerm_eventhub_authorization_rule.ar.primary_connection_string
-    name              = "export"
+    name              = "eventhub"
   }
 
   route {
-    name           = "export"
+    name           = "eventhub"
     source         = "DeviceMessages"
     condition      = "true"
-    endpoint_names = ["export"]
+    endpoint_names = ["eventhub"]
+    enabled        = true
+  }
+
+  endpoint {
+    type                       = "AzureIotHub.StorageContainer"
+    connection_string          = azurerm_storage_account.example.primary_blob_connection_string
+    name                       = "container"
+    batch_frequency_in_seconds = 60
+    max_chunk_size_in_bytes    = 10485760
+    container_name             = azurerm_storage_container.example.name
+    encoding                   = "CSV"
+    file_name_format           = "{iothub}/{partition}_{YYYY}_{MM}_{DD}_{HH}_{mm}"
+  }
+
+  route {
+    name           = "container"
+    source         = "DeviceMessages"
+    condition      = "true"
+    endpoint_names = ["container"]
     enabled        = true
   }
 }
