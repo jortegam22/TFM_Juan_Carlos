@@ -1,0 +1,5 @@
+az extension add --name azure-cli-iot-ext
+
+az iot hub device-identity create --hub-name "__iothub_name__" --device-id "__deviceId__"
+
+connection string = az iot hub device-identity show-connection-string --hub-name "__iothub_name__" --device-id "__deviceId__" 
