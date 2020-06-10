@@ -183,3 +183,9 @@ resource "azurerm_stream_analytics_output_blob" "prodbs" {
     format          = "LineSeparated"
   }
 }
+
+resource "azurerm_logic_app_workflow" "logapp" {
+  name                = "__logic_app_name__"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
