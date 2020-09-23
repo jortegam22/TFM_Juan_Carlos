@@ -188,7 +188,7 @@ resource "azurerm_stream_analytics_output_blob" "prodbs" {
 
 resource "azurerm_monitor_action_group" "ag" {
   name                = "JCActionGroup"
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.rg.name
   short_name          = "JCAG"
 
   azure_app_push_receiver {
