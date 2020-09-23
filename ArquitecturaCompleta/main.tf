@@ -184,8 +184,44 @@ resource "azurerm_stream_analytics_output_blob" "prodbs" {
   }
 }
 
-resource "azurerm_logic_app_workflow" "logapp" {
-  name                = "__logic_app_name__"
-  location            = azurerm_resource_group.rg.location
+// Metrics Configuration
+
+resource "azurerm_monitor_action_group" "ag" {
+  name                = "JCActionGroup"
+  resource_group_name = azurerm_resource_group.example.name
+  short_name          = "JCAG"
+
+  azure_app_push_receiver {
+    name          = "JuanCarlos"
+    email_address = "j.ortegam@alumnos.upm.es"
+  }
+  email_receiver {
+    name          = "JuanCarlos"
+    email_address = "j.ortegam@alumnos.upm.es"
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "al" {
+  name                = "IoT_Events"
   resource_group_name = azurerm_resource_group.rg.name
+  scopes              = [azurerm_iothub.iothub.id]
+  description         = "Se enviará una notificación, en caso de que el IoT no reciba ningún evento en 5 min"
+
+  criteria {
+    metric_namespace = "AzureIoTHub.IoTHub"
+    metric_name      = "InputEvents"
+    aggregation      = "Total"
+    operator         = "LessThan"
+    threshold        = 1
+
+    dimension {
+      name     = "ApiName"
+      operator = "Include"
+      values   = ["*"]
+    }
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.ag.id
+  }
 }
