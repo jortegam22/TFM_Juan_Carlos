@@ -117,6 +117,12 @@ resource "azurerm_storage_container" "pre_asa" {
   container_access_type = "container"
 }
 
+resource "azurerm_storage_container" "all_events" {
+  name                  = "__all_events__"
+  storage_account_name  = azurerm_storage_account.sa.name
+  container_access_type = "container"
+}
+
 resource "azurerm_storage_container" "post_asa" {
   name                  = "__post_ASA__"
   storage_account_name  = azurerm_storage_account.sa.name
@@ -147,6 +153,10 @@ resource "azurerm_stream_analytics_job" "asa" {
   INTO __asa_output_name__
   FROM Eventos
   WHERE eventType = 'Error'
+
+  SELECT *
+  INTO __asa_output_name2__
+  FROM Eventos
   QUERY
 }
 
