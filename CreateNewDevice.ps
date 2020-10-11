@@ -1,5 +1,18 @@
-az extension add --name azure-cli-iot-ext
+#Connect with Azure
+Connect-AzureRmAccount
 
-az iot hub device-identity create --hub-name "__iothub_name__" --device-id "__deviceId__"
+#Connect to IotHub
+$IoTHub = Get-AzureRmIotHub -Name $IoTHubName -ResourceGroupName $RGName
+$IoTHubKey = Get-AzureRmIotHubKey -ResourceGroupName $RGName -Name $IoTHubName -KeyName $IoTKeyName
+$IoTConnectionString = “HostName=$($IoTHubName).azure-devices.net;SharedAccessKeyName=$($IoTKeyName);SharedAccessKey=$($IoTHubKey.PrimaryKey)”
 
-connection string = az iot hub device-identity show-connection-string --hub-name "__iothub_name__" --device-id "__deviceId__" 
+# New DeviceID
+$deviceParams = @{
+iotConnString = $IoTConnectionString
+deviceId = $newDeviceID
+}
+$device = Register-IoTDevice @deviceParams
+
+$IoTConnectionString
+
+$device
