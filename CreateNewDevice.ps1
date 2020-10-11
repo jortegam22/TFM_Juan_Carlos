@@ -1,6 +1,3 @@
-#Connect with Azure
-Connect-AzureRmAccount
-
 #Connect to IotHub
 $IoTHub = Get-AzureRmIotHub -Name $IoTHubName -ResourceGroupName $RGName
 $IoTHubKey = Get-AzureRmIotHubKey -ResourceGroupName $RGName -Name $IoTHubName -KeyName $IoTKeyName
